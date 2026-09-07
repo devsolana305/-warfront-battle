@@ -1,0 +1,105 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Warfront Battle V5</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#08111b;color:#fff;font-family:Arial,sans-serif}.app{max-width:760px;margin:auto;padding:10px;background:linear-gradient(#13263b,#07111c);min-height:100vh}
+.top{display:flex;justify-content:space-between;align-items:center}.logo{font-size:25px;font-weight:1000}.sub{font-size:10px;letter-spacing:3px;color:#9db7d1}.badge{padding:9px 12px;border:2px solid #45637f;border-radius:13px;background:#1d3550;font-weight:900}
+.arena{position:relative;height:600px;border:4px solid #536d84;border-radius:25px;overflow:hidden;background:
+linear-gradient(90deg,#2b5d7d 0 31%,#3f654e 31% 69%,#8c4549 69%),
+linear-gradient(#0000,#0000)}
+.arena:before{content:"";position:absolute;inset:0;background:
+radial-gradient(circle at 10% 20%,#c6a86a 0 4px,transparent 5px),
+radial-gradient(circle at 90% 70%,#b7965c 0 5px,transparent 6px),
+linear-gradient(90deg,transparent 32.7%,#fff2 32.9%,#fff2 33.1%,transparent 33.3%,transparent 66.7%,#fff2 66.9%,#fff2 67.1%,transparent 67.3%);
+opacity:.8}
+.lane{position:absolute;top:0;bottom:0;width:25%;border-left:2px dashed #ffffff20;border-right:2px dashed #ffffff20;background:#ffffff05}.l1{left:4%}.l2{left:37.5%}.l3{right:4%}
+.centerRoad{position:absolute;left:0;right:0;top:48%;height:50px;background:#76674e;border-top:3px solid #a99672;border-bottom:3px solid #a99672}
+.cover{position:absolute;font-size:30px;opacity:.5}.c1{left:8%;top:40%}.c2{right:8%;top:25%}.c3{left:44%;top:63%}.c4{right:14%;top:67%}
+.hq{position:absolute;z-index:15;left:50%;transform:translateX(-50%);width:170px;height:105px;border:4px solid #fff;border-radius:25px;text-align:center;box-shadow:0 12px 28px #0009;padding-top:8px}.hq .tower{display:inline-block;margin:0 3px;width:24px;height:28px;background:#d8dce0;border:2px solid #59636c;border-radius:5px 5px 2px 2px;position:relative}.hq .tower:after{content:"";position:absolute;left:5px;right:5px;bottom:4px;height:8px;background:#313941}.hq b{display:block;font-size:12px;margin-top:3px}.hq small{font-size:10px}.enemyHQ{top:9px;background:linear-gradient(#a23b47,#702a34);border-color:#ff7880}.yourHQ{bottom:9px;background:linear-gradient(#1676ad,#0e4e77);border-color:#64d2ff}
+.door{position:absolute;bottom:0;width:35px;height:35px;background:#101a24;border:3px solid #61d2ff;border-bottom:0;border-radius:14px 14px 0 0}.door1{left:calc(50% - 66px)}.door2{left:calc(50% - 17px)}.door3{left:calc(50% + 32px)}
+.enemyDoor{top:0;bottom:auto;border-color:#ff6872}
+.spawnFX{position:absolute;width:35px;height:35px;border:3px solid #fff;border-radius:50%;box-shadow:0 0 24px 8px #62d4ff;animation:fx .5s forwards;z-index:20;pointer-events:none}@keyframes fx{to{opacity:0;transform:scale(2)}}
+
+.unit{position:absolute;width:58px;height:78px;z-index:12;transform:translate(-50%,-50%);transition:left .08s linear,top .08s linear;filter:drop-shadow(0 5px 3px #0009)}
+.unit svg{width:58px;height:66px;overflow:visible}.unit .label{text-align:center;font-size:7px;font-weight:1000;text-shadow:0 2px 3px #000;margin-top:-2px}.hp{width:48px;height:6px;background:#101820;border:1px solid #fff8;border-radius:5px;overflow:hidden;margin:0 auto}.hp i{display:block;height:100%;background:#5ae17a}.enemy .hp i{background:#ff5b66}
+@keyframes bob{from{transform:translateY(0)}to{transform:translateY(-3px)}}.unit svg .body{animation:bob .3s ease-in-out infinite alternate}.unit.attack svg .weapon{animation:recoil .16s}.unit.hit{filter:brightness(1.8) drop-shadow(0 5px 3px #0009)}@keyframes recoil{50%{transform:translateX(5px)}}
+.shot{position:absolute;z-index:25;width:7px;height:3px;border-radius:5px;background:#ffd86a;box-shadow:0 0 7px #ffd86a;pointer-events:none;transition:all .22s linear}
+.rocketShot{font-size:18px;position:absolute;z-index:25;transition:all .3s linear;pointer-events:none}
+.explosion{position:absolute;z-index:30;font-size:54px;transform:translate(-50%,-50%);animation:explode .7s forwards}@keyframes explode{0%{opacity:1;transform:translate(-50%,-50%) scale(.2)}25%{transform:translate(-50%,-50%) scale(1.2)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.9)}}
+
+.stats{display:flex;justify-content:space-between;align-items:center;margin:7px 2px;font-weight:900}.timer{font-size:30px}.bar{width:150px;height:9px;background:#111;border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:#54df78}.bar.red i{background:#ff5965}
+.energyBox{padding:10px 13px;background:#1b334d;border:2px solid #3d5b76;border-radius:17px;margin:8px 0}.energyTop{display:flex;justify-content:space-between;font-weight:1000}.energy{height:12px;background:#101820;border-radius:8px;overflow:hidden;margin-top:6px}.energy i{display:block;height:100%;background:#46cfff}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.card{min-height:100px;border:3px solid #3c5a77;border-radius:15px;background:#203854;color:#fff;font-weight:1000}.card.sel{border-color:#ffd34d}.card:disabled{opacity:.4}.pic{height:57px;display:flex;justify-content:center;align-items:center}.pic svg{width:55px;height:55px}
+.actions{display:flex;gap:8px;margin-top:9px}.actions button{flex:1;padding:14px;border:0;border-radius:15px;font-weight:1000;font-size:14px}.start{background:#df981d}.solar{background:#3c526d;color:#fff}.msg{text-align:center;min-height:24px;color:#b9cce0;font-size:13px;margin:8px}
+.result{position:fixed;inset:0;z-index:80;display:none;align-items:center;justify-content:center;background:#07111ddd;padding:20px}.result.show{display:flex}.resultCard{width:min(410px,94vw);padding:26px;border:3px solid #ffd34d;border-radius:24px;background:#203855;text-align:center}.resultCard .big{font-size:60px}.resultCard h2{font-size:34px;margin:4px}.resultCard button{width:100%;padding:14px;border:0;border-radius:14px;background:#df981d;font-weight:1000;margin-top:14px}
+@media(max-width:430px){.arena{height:535px}.bar{width:115px}.card{min-height:94px;font-size:11px}.logo{font-size:21px}}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="top"><div><div class="logo">⚔️ WARFRONT BATTLE</div><div class="sub">V5 • SOLDIERS DEPLOY FROM HQ</div></div><div class="badge">⭐ COMMANDER<br>Lv.1</div></div>
+<div class="arena" id="arena">
+<div class="lane l1"></div><div class="lane l2"></div><div class="lane l3"></div><div class="centerRoad"></div>
+<div class="cover c1">▰▰</div><div class="cover c2">▰▰</div><div class="cover c3">▰▰</div><div class="cover c4">▰▰</div>
+<div class="hq enemyHQ" id="enemyHQ"><span class="tower"></span><span class="tower"></span><span class="tower"></span><b>ENEMY DEFENSE BASE</b><small id="enemyHP">1000 / 1000</small></div>
+<div class="hq yourHQ" id="yourHQ"><span class="tower"></span><span class="tower"></span><span class="tower"></span><b>YOUR DEFENSE BASE</b><small id="yourHP">1000 / 1000</small><div class="door door1"></div><div class="door door2"></div><div class="door door3"></div></div>
+<div class="door enemyDoor door1"></div><div class="door enemyDoor door2"></div><div class="door enemyDoor door3"></div>
+</div>
+<div class="stats"><div>🏰 <b id="my">1000</b><div class="bar"><i id="mybar"></i></div></div><div class="timer" id="timer">2:00</div><div><b id="enemy">1000</b> 🏰<div class="bar red"><i id="enemybar"></i></div></div></div>
+<div class="energyBox"><div class="energyTop"><span>⚡ WAR ENERGY</span><span id="energyText">10 / 10</span></div><div class="energy"><i id="energyFill"></i></div></div>
+<div class="cards" id="cards"></div>
+<div class="actions"><button class="start" id="start">⚔️ START BATTLE</button><button class="solar" id="solar">☀️ SOLAR SURGE</button></div>
+<div class="msg" id="msg">Select a unit, then tap one of the three blue HQ gates. Your soldier will physically leave the base.</div>
+</div>
+<div class="result" id="result"><div class="resultCard"><div class="big" id="resultIcon">🏆</div><h2 id="resultTitle">VICTORY!</h2><p id="resultReason"></p><p><b id="finalYou">0</b> YOUR HQ &nbsp; • &nbsp; <b id="finalEnemy">0</b> ENEMY HQ</p><button onclick="location.reload()">🔄 PLAY AGAIN</button></div></div>
+
+<script>
+(()=> {
+const arena=document.getElementById('arena'),cards=document.getElementById('cards'),msg=document.getElementById('msg');
+const T=[{id:'rifle',name:'Rifleman',cost:2,hp:100,dmg:18,speed:13,gun:'rifle'},{id:'gren',name:'Grenadier',cost:3,hp:90,dmg:29,speed:11,gun:'gren'},{id:'heavy',name:'Heavy',cost:4,hp:230,dmg:17,speed:8,gun:'heavy'},{id:'rocket',name:'Rocket',cost:5,hp:80,dmg:48,speed:10,gun:'rocket'}];
+let energy=10,selected=0,units=[],my=1000,enemy=1000,time=120,running=false,done=false,ai=0,last=performance.now();
+
+function soldierSVG(type,enemyTeam=false){
+ const body=enemyTeam?'#a23d49':'#286f9e';
+ const dark='#182431',skin='#d39a72';
+ let weapon='';
+ if(type==='rifle') weapon='<rect class="weapon" x="34" y="31" width="27" height="4" rx="2" fill="#222b33" transform="rotate(8 34 31)"/><rect x="52" y="34" width="7" height="3" fill="#111"/>';
+ if(type==='gren') weapon='<rect class="weapon" x="34" y="31" width="23" height="6" rx="2" fill="#26323a" transform="rotate(10 34 31)"/><circle cx="57" cy="34" r="4" fill="#4f6068"/>';
+ if(type==='heavy') weapon='<rect class="weapon" x="31" y="28" width="28" height="10" rx="4" fill="#222b33"/><rect x="50" y="36" width="9" height="7" fill="#111"/>';
+ if(type==='rocket') weapon='<rect class="weapon" x="33" y="28" width="29" height="7" rx="3" fill="#3f5145" transform="rotate(-6 33 28)"/><polygon points="61,28 67,31 61,34" fill="#aeb5a9"/>';
+ return `<svg viewBox="0 0 70 78"><g class="body"><circle cx="28" cy="13" r="10" fill="${skin}" stroke="${dark}" stroke-width="2"/><path d="M18 11 Q28 1 38 11 L37 7 Q28 1 19 7Z" fill="#303e4a" stroke="${dark}" stroke-width="2"/><rect x="16" y="22" width="25" height="28" rx="9" fill="${body}" stroke="${dark}" stroke-width="3"/><rect x="12" y="25" width="8" height="17" rx="4" fill="${body}" stroke="${dark}" stroke-width="2"/><rect x="36" y="25" width="8" height="17" rx="4" fill="${body}" stroke="${dark}" stroke-width="2"/>${weapon}<path d="M19 49 L16 66 M35 49 L39 66" stroke="${dark}" stroke-width="7" stroke-linecap="round"/><path d="M11 67 L21 67 M35 67 L45 67" stroke="#111820" stroke-width="6" stroke-linecap="round"/></g></svg>`;
+}
+function cardSVG(type){return soldierSVG(type,false)}
+T.forEach((t,i)=>{const b=document.createElement('button');b.className='card'+(i===0?' sel':'');b.type='button';b.innerHTML=`<div class="pic">${cardSVG(t.id)}</div>${t.name}<div>⚡ ${t.cost}</div>`;b.onclick=()=>{selected=i;cards.querySelectorAll('.card').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');msg.textContent='Selected '+t.name+'. Tap a blue gate on your HQ.'};cards.appendChild(b)});
+function fx(x,y){const f=document.createElement('div');f.className='spawnFX';f.style.left=x+'%';f.style.top=y+'%';arena.appendChild(f);setTimeout(()=>f.remove(),500)}
+function spawn(side,type,lane){
+ const t=T.find(x=>x.id===type),x=[28,50,72][lane],y=side==='you'?86:14;
+ const u={side,type,lane,x,y,hp:t.hp,max:t.hp,cd:0,el:null};units.push(u);
+ const el=document.createElement('div');el.className='unit '+side;el.innerHTML=`<div class="hp"><i></i></div>${soldierSVG(type,side==='enemy')}<div class="label">${t.name}</div>`;arena.appendChild(el);u.el=el;el.style.left=x+'%';el.style.top=y+'%';fx(x,y)
+}
+function deploy(lane){if(!running){msg.textContent='Press START BATTLE first.';return}const t=T[selected];if(energy<t.cost){msg.textContent='Not enough War Energy.';return}energy-=t.cost;spawn('you',t.id,lane);msg.textContent='🚪 '+t.name+' came out of your defense base!';render()}
+function enemySpawn(){spawn('enemy',T[Math.floor(Math.random()*T.length)].id,Math.floor(Math.random()*3))}
+function fire(a,b){
+ const p=document.createElement('div');p.className=a.type==='rocket'?'rocketShot':'shot';p.textContent=a.type==='rocket'?'🚀':'';p.style.left=a.x+'%';p.style.top=a.y+'%';arena.appendChild(p);
+ requestAnimationFrame(()=>{p.style.left=b.x+'%';p.style.top=b.y+'%'});setTimeout(()=>p.remove(),320);explosion(b.x,b.y);
+ a.el.classList.add('attack');setTimeout(()=>a.el&&a.el.classList.remove('attack'),250);b.el.classList.add('hit');setTimeout(()=>b.el&&b.el.classList.remove('hit'),140);b.hp-=T.find(t=>t.id===a.type).dmg;
+}
+function explosion(x,y){const e=document.createElement('div');e.className='explosion';e.textContent='💥';e.style.left=x+'%';e.style.top=y+'%';arena.appendChild(e);setTimeout(()=>e.remove(),700)}
+function end(win,reason){if(done)return;done=true;running=false;if(enemy<=0)explosion(50,14);if(my<=0)explosion(50,86);document.getElementById('resultIcon').textContent=win?'🏆':'💀';document.getElementById('resultTitle').textContent=win?'VICTORY!':'DEFEAT';document.getElementById('resultReason').textContent=reason;document.getElementById('finalYou').textContent=Math.round(Math.max(0,my));document.getElementById('finalEnemy').textContent=Math.round(Math.max(0,enemy));setTimeout(()=>document.getElementById('result').classList.add('show'),500)}
+function render(){energyText.textContent=Math.floor(energy)+' / 10';energyFill.style.width=energy*10+'%';document.getElementById('my').textContent=Math.round(Math.max(0,my));document.getElementById('enemy').textContent=Math.round(Math.max(0,enemy));document.getElementById('mybar').style.width=Math.max(0,my/10)+'%';document.getElementById('enemybar').style.width=Math.max(0,enemy/10)+'%';document.getElementById('yourHP').textContent=Math.round(Math.max(0,my))+' / 1000';document.getElementById('enemyHP').textContent=Math.round(Math.max(0,enemy))+' / 1000';cards.querySelectorAll('.card').forEach((b,i)=>b.disabled=!running||energy<T[i].cost)}
+function step(dt){
+ energy=Math.min(10,energy+dt*.72);ai+=dt;if(ai>2.6){ai=0;enemySpawn()}
+ units.forEach(u=>{const t=T.find(x=>x.id===u.type),foes=units.filter(v=>v.side!==u.side&&v.lane===u.lane&&v.hp>0),target=foes.sort((a,b)=>Math.abs(a.y-u.y)-Math.abs(b.y-u.y))[0];if(target&&Math.abs(target.y-u.y)<5.5){u.cd-=dt;if(u.cd<=0){u.cd=.65;fire(u,target)}}else{u.y+=(u.side==='you'?-1:1)*t.speed*dt;if(u.side==='you'&&u.y<=12){enemy-=t.dmg*.16*dt;u.hp=0;explosion(u.x,12)}if(u.side==='enemy'&&u.y>=88){my-=t.dmg*.13*dt;u.hp=0;explosion(u.x,88)}}u.el.style.left=u.x+'%';u.el.style.top=u.y+'%';u.el.querySelector('.hp i').style.width=Math.max(0,u.hp/u.max*100)+'%'});
+units=units.filter(u=>{if(u.hp<=0){u.el.remove();return false}return true});render();if(enemy<=0)end(true,'Enemy defense base destroyed!');else if(my<=0)end(false,'Your defense base was destroyed!');else if(time<=0)end(my>enemy,my>enemy?'Time expired — your HQ has more health.':'Time expired — enemy HQ has more health.')}
+[0,1,2].forEach(i=>document.querySelector('.door'+(i+1)).addEventListener('click',()=>deploy(i)));
+document.querySelectorAll('.enemyDoor').forEach(x=>x.style.pointerEvents='none');
+document.getElementById('start').onclick=()=>{if(done){location.reload();return}running=true;msg.textContent='⚔️ Battle started! Send troops from your HQ and push to the enemy base!';render()};
+document.getElementById('solar').onclick=()=>{if(!running){msg.textContent='Start the battle first.';return}if(energy<6){msg.textContent='Need 6 War Energy.';return}energy-=6;enemy=Math.max(0,enemy-90);units.filter(u=>u.side==='you').forEach(u=>u.hp=Math.min(u.max,u.hp+45));msg.textContent='☀️ SOLAR SURGE activated!';render()};
+setInterval(()=>{if(running&&!done){time--;document.getElementById('timer').textContent=Math.floor(time/60)+':'+String(time%60).padStart(2,'0')}},1000);
+function loop(now){const dt=Math.min(.05,(now-last)/1000);last=now;if(running&&!done)step(dt);requestAnimationFrame(loop)}render();requestAnimationFrame(loop);
+})();
+</script>
+</body></html>
